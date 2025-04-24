@@ -3,45 +3,24 @@ package com.education.ztu.Flyweight;
 import java.util.ArrayList;
 import java.util.List;
 
-class LightElementNode extends LightNode {
-    private final String tagName;
-    private final DisplayType displayType;
-    private final ClosingType closingType;
-    private final List<String> cssClasses;
+public class LightElementNode extends LightNode {
+    private final LightElementNodeType type;
+    private final List<String> cssClasses = new ArrayList<>();
     private final List<LightNode> children = new ArrayList<>();
 
-    public LightElementNode(String tagName, DisplayType displayType, ClosingType closingType, List<String> cssClasses) {
-        this.tagName = tagName;
-        this.displayType = displayType;
-        this.closingType = closingType;
-        this.cssClasses = cssClasses;
+    public LightElementNode(LightElementNodeType type) {
+        this.type = type;
     }
 
-    public void addChild(LightNode node) {
-        children.add(node);
+    public void addClass(String className) {
+        cssClasses.add(className);
     }
 
-    public List<LightNode> getChildren() {
-        return children;
-    }
-
-    @Override
-    public String outerHTML() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("<").append(tagName);
-        if (!cssClasses.isEmpty()) {
-            sb.append(" class=\"").append(String.join(" ", cssClasses)).append("\"");
+    public void appendChild(LightNode child) {
+        if (type.getClosingType() == LightElementNodeType.ClosingType.SINGLE) {
+            throw new UnsupportedOperationException("Single tags can't have children.");
         }
-        if (closingType == ClosingType.SINGLE) {
-            sb.append("/>");
-        } else {
-            sb.append(">");
-            for (LightNode child : children) {
-                sb.append(child.outerHTML());
-            }
-            sb.append("</").append(tagName).append(">");
-        }
-        return sb.toString();
+        children.add(child);
     }
 
     @Override
@@ -51,5 +30,21 @@ class LightElementNode extends LightNode {
             sb.append(child.outerHTML());
         }
         return sb.toString();
+    }
+
+    @Override
+    public String outerHTML() {
+        StringBuilder html = new StringBuilder();
+        html.append("<").append(type.getTagName());
+        if (!cssClasses.isEmpty()) {
+            html.append(" class=\"").append(String.join(" ", cssClasses)).append("\"");
+        }
+
+        if (type.getClosingType() == LightElementNodeType.ClosingType.SINGLE) {
+            html.append("/>");
+        } else {
+            html.append(">").append(innerHTML()).append("</").append(type.getTagName()).append(">");
+        }
+        return html.toString();
     }
 }

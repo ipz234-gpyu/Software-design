@@ -1,35 +1,47 @@
 package com.education.ztu.Flyweight;
 
-import java.util.List;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 public class Main {
-    public static void main(String[] args) {
-        List<String> bookLines = List.of(
-                "The Great Adventure",
-                "Chapter 1",
-                "  It was a bright cold day in April, and the clocks were striking thirteen.",
-                "This is a regular paragraph with more than 20 characters.",
-                "Another paragraph with enough length."
+    public static void main(String[] args) throws IOException {
+        InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream("book.txt");
+        if (inputStream == null) {
+            System.out.println("File not found: book.txt");
+            return;
+        }
+
+        String bookText = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+
+        // Без Flyweight
+        long beforeMemory = getUsedMemory();
+        LightElementNode rootWithoutFlyweight = new LightElementNode(
+                new LightElementNodeType("div", LightElementNodeType.DisplayType.BLOCK, LightElementNodeType.ClosingType.PAIR)
         );
 
-        LightElementNode htmlTree = BookHTMLParser.parseBook(bookLines);
+        for (String paragraph : bookText.split("\n")) {
+            LightElementNode p = new LightElementNode(
+                    new LightElementNodeType("p", LightElementNodeType.DisplayType.BLOCK, LightElementNodeType.ClosingType.PAIR)
+            );
+            p.appendChild(new LightTextNode(paragraph));
+            rootWithoutFlyweight.appendChild(p);
+        }
 
-        System.out.println("Generated HTML:");
-        System.out.println(htmlTree.outerHTML());
+        long afterMemory = getUsedMemory();
+        System.out.println("Без Flyweight: приблизно " + (afterMemory - beforeMemory) / 1024 + " KB");
 
-        int nodeCount = countNodes(htmlTree);
-        System.out.printf("\nTotal nodes in memory: %d\nEstimated memory usage: ~%d bytes\n", nodeCount, nodeCount * 64);
+        // З Flyweight через BookParser
+        BookParser bookParser = new BookParser();
+        long beforeMemoryWithFlyweight = getUsedMemory();
+        LightElementNode rootWithFlyweight = bookParser.parseText(bookText);
+        long afterMemoryWithFlyweight = getUsedMemory();
+        System.out.println("З Flyweight: приблизно " + (afterMemoryWithFlyweight - beforeMemoryWithFlyweight) / 1024 + " KB");
     }
 
-    private static int countNodes(LightNode node) {
-        if (node instanceof LightTextNode) return 1;
-        if (node instanceof LightElementNode) {
-            int sum = 1;
-            for (LightNode child : ((LightElementNode) node).getChildren()) {
-                sum += countNodes(child);
-            }
-            return sum;
-        }
-        return 0;
+    private static long getUsedMemory() {
+        System.gc();
+        Runtime runtime = Runtime.getRuntime();
+        return runtime.totalMemory() - runtime.freeMemory();
     }
 }
