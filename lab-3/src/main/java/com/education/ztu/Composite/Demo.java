@@ -5,16 +5,22 @@ public class Demo {
         LightElementNode div = new LightElementNode("div", LightElementNode.DisplayType.BLOCK, LightElementNode.ClosingType.PAIR);
         div.addClass("container");
 
-        LightElementNode ul = new LightElementNode("ul", LightElementNode.DisplayType.BLOCK, LightElementNode.ClosingType.PAIR);
-        ul.addClass("list");
+        LightElementNode button = new LightElementNode("button", LightElementNode.DisplayType.INLINE, LightElementNode.ClosingType.PAIR);
+        button.appendChild(new LightTextNode("Click Me"));
 
-        for (int i = 1; i <= 3; i++) {
-            LightElementNode li = new LightElementNode("li", LightElementNode.DisplayType.BLOCK, LightElementNode.ClosingType.PAIR);
-            li.appendChild(new LightTextNode("Item " + i));
-            ul.appendChild(li);
-        }
+        button.addEventListener("click", (eventType, source) -> {
+            System.out.println("Button was clicked! Source tag: <" + source.outerHTML() + ">");
+        });
 
-        div.appendChild(ul);
+        button.addEventListener("mouseover", (eventType, source) -> {
+            System.out.println("Mouse is over the button! Tag: <" + source.outerHTML() + ">");
+        });
+
+        div.appendChild(button);
+
         System.out.println(div.outerHTML());
+
+        button.triggerEvent("click");
+        button.triggerEvent("mouseover");
     }
 }

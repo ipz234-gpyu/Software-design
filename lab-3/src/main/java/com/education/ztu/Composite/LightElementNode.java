@@ -11,6 +11,7 @@ public class LightElementNode extends LightNode {
     private final ClosingType closingType;
     private final List<String> cssClasses = new ArrayList<>();
     private final List<LightNode> children = new ArrayList<>();
+    private final Map<String, List<EventListener>> listeners = new HashMap<>();
 
     public LightElementNode(String tagName, DisplayType displayType, ClosingType closingType) {
         this.tagName = tagName;
@@ -27,6 +28,28 @@ public class LightElementNode extends LightNode {
             throw new UnsupportedOperationException("Single tags can't have children.");
         }
         children.add(child);
+    }
+
+    public void addEventListener(String eventType, EventListener listener) {
+        listeners.computeIfAbsent(eventType, k -> new ArrayList<>()).add(listener);
+    }
+
+    public void removeEventListener(String eventType, EventListener listener) {
+        List<EventListener> eventListeners = listeners.get(eventType);
+        if (eventListeners != null) {
+            eventListeners.remove(listener);
+            if (eventListeners.isEmpty()) {
+                listeners.remove(eventType);
+            }
+        }
+    }
+
+    public void triggerEvent(String eventType) {
+        System.out.println("Event '" + eventType + "' triggered on <" + tagName + ">");
+        List<EventListener> eventListeners = listeners.getOrDefault(eventType, Collections.emptyList());
+        for (EventListener listener : eventListeners) {
+            listener.handleEvent(eventType, this);
+        }
     }
 
     public int getChildrenCount() {
@@ -53,7 +76,6 @@ public class LightElementNode extends LightNode {
         if (closingType == ClosingType.SINGLE) {
             return "<" + tagName + attrs + "/>";
         }
-
         return "<" + tagName + attrs + ">" + innerHTML() + "</" + tagName + ">";
     }
 }
