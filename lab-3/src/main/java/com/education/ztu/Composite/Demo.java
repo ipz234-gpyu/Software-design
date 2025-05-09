@@ -19,7 +19,7 @@ public class Demo {
         div.appendChild(ul);
         System.out.println(div.outerHTML());
 
-        div.renderWithLifecycle();
+        div.renderWithState();
 
         LightNodeIterator dfs = div.getIterator(TraversalType.DEPTH);
         while (dfs.hasNext()) {
