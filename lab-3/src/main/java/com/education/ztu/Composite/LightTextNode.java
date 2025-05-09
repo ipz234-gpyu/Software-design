@@ -18,19 +18,19 @@ public class LightTextNode extends LightNode {
     }
 
     @Override
-    protected void onStylesApplied() {
+    public void onStylesApplied() {
         stylesApplied = true;
         System.out.println("No styles applicable to text node.");
     }
 
     @Override
-    protected void onClassListApplied() {
+    public void onClassListApplied() {
         classListApplied = true;
         System.out.println("No class list for text node.");
     }
 
     @Override
-    protected String getNodeType() {
+    public String getNodeType() {
         return "TextNode";
     }
 }

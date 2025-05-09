@@ -78,13 +78,13 @@ public class LightElementNode extends LightNode implements IterableCollection {
     }
 
     @Override
-    protected void onClassListApplied() {
+    public void onClassListApplied() {
         classListApplied = true;
         System.out.println("Class list applied: " + String.join(" ", cssClasses));
     }
 
     @Override
-    protected String getNodeType() {
+    public String getNodeType() {
         return "Element <" + tagName + ">";
     }
 }
