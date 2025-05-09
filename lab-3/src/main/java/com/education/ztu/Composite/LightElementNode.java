@@ -22,11 +22,19 @@ public class LightElementNode extends LightNode implements IterableCollection {
         cssClasses.add(className);
     }
 
+    public void removeClass(String className) {
+        cssClasses.remove(className);
+    }
+
     public void appendChild(LightNode child) {
         if (closingType == ClosingType.SINGLE) {
             throw new UnsupportedOperationException("Single tags can't have children.");
         }
         children.add(child);
+    }
+
+    public void removeChild(LightNode child) {
+        children.remove(child);
     }
 
     public int getChildrenCount() {
