@@ -56,4 +56,15 @@ public class LightElementNode extends LightNode {
 
         return "<" + tagName + attrs + ">" + innerHTML() + "</" + tagName + ">";
     }
+
+    @Override
+    protected void onClassListApplied() {
+        classListApplied = true;
+        System.out.println("Class list applied: " + String.join(" ", cssClasses));
+    }
+
+    @Override
+    protected String getNodeType() {
+        return "Element <" + tagName + ">";
+    }
 }

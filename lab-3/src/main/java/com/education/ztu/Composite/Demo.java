@@ -16,5 +16,7 @@ public class Demo {
 
         div.appendChild(ul);
         System.out.println(div.outerHTML());
+
+        div.renderWithLifecycle();
     }
 }
