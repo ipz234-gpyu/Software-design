@@ -18,5 +18,11 @@ public class Demo {
         System.out.println(div.outerHTML());
 
         div.renderWithLifecycle();
+
+        LightNodeIterator dfs = div.getIterator(TraversalType.DEPTH);
+        while (dfs.hasNext()) {
+            LightNode node = dfs.next();
+            System.out.println(node.outerHTML());
+        }
     }
 }
