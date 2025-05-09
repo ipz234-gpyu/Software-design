@@ -2,7 +2,7 @@ package com.education.ztu.Composite;
 
 import java.util.*;
 
-public class LightElementNode extends LightNode {
+public class LightElementNode extends LightNode implements IterableCollection {
     public enum DisplayType { BLOCK, INLINE }
     public enum ClosingType { SINGLE, PAIR }
 
@@ -36,6 +36,18 @@ public class LightElementNode extends LightNode {
     private String renderAttributes() {
         if (cssClasses.isEmpty()) return "";
         return " class=\"" + String.join(" ", cssClasses) + "\"";
+    }
+
+    @Override
+    public LightNodeIterator getIterator(TraversalType type) {
+        return switch (type) {
+            case DEPTH -> new DepthFirstIterator(this);
+            case BREADTH -> new BreadthFirstIterator(this);
+        };
+    }
+
+    public List<LightNode> getChildren() {
+        return children;
     }
 
     @Override
