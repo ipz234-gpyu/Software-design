@@ -3,6 +3,7 @@ package com.education.ztu.Composite;
 import com.education.ztu.Composite.State.CreatedState;
 import com.education.ztu.Composite.State.RenderState;
 import com.education.ztu.Composite.State.TextRenderedState;
+import com.education.ztu.Composite.Visitor.Visitor;
 
 public abstract class LightNode {
     protected boolean created = false;
@@ -61,4 +62,5 @@ public abstract class LightNode {
     }
 
     public abstract String getNodeType();
+    public abstract void accept(Visitor visitor);
 }

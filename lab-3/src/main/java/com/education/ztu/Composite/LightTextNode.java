@@ -1,5 +1,7 @@
 package com.education.ztu.Composite;
 
+import com.education.ztu.Composite.Visitor.Visitor;
+
 public class LightTextNode extends LightNode {
     private final String text;
 
@@ -32,5 +34,10 @@ public class LightTextNode extends LightNode {
     @Override
     public String getNodeType() {
         return "TextNode";
+    }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
     }
 }
