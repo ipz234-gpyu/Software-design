@@ -1,5 +1,7 @@
 package com.education.ztu.Composite;
 
+import com.education.ztu.Composite.Visitor.Visitor;
+
 import java.util.*;
 
 public class LightElementNode extends LightNode implements IterableCollection {
@@ -86,5 +88,13 @@ public class LightElementNode extends LightNode implements IterableCollection {
     @Override
     public String getNodeType() {
         return "Element <" + tagName + ">";
+    }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+        for (LightNode child : children) {
+            child.accept(visitor);
+        }
     }
 }
