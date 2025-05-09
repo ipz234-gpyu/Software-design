@@ -1,5 +1,7 @@
 package com.education.ztu.Composite;
 
+import com.education.ztu.Composite.Command.*;
+
 public class Demo {
     public static void main(String[] args) {
         LightElementNode div = new LightElementNode("div", LightElementNode.DisplayType.BLOCK, LightElementNode.ClosingType.PAIR);
@@ -24,5 +26,14 @@ public class Demo {
             LightNode node = dfs.next();
             System.out.println(node.outerHTML());
         }
+
+        CommandInvoker invoker = new CommandInvoker();
+
+        LightCommand addClassCommand = new AddClassCommand(div, "my-class");
+        invoker.executeCommand(addClassCommand);
+
+        System.out.println(div.outerHTML());
+        invoker.undoLastCommand();
+        System.out.println(div.outerHTML());
     }
 }
