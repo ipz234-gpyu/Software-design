@@ -8,16 +8,12 @@ public class Demo {
         LightElementNode div = new LightElementNode("div", LightElementNode.DisplayType.BLOCK, LightElementNode.ClosingType.PAIR);
         div.addClass("container");
 
-        LightElementNode ul = new LightElementNode("ul", LightElementNode.DisplayType.BLOCK, LightElementNode.ClosingType.PAIR);
-        ul.addClass("list");
+        LightImageNode localImage = new LightImageNode("images/logo.png");
+        LightImageNode networkImage = new LightImageNode("https://example.com/image.jpg");
 
-        for (int i = 1; i <= 3; i++) {
-            LightElementNode li = new LightElementNode("li", LightElementNode.DisplayType.BLOCK, LightElementNode.ClosingType.PAIR);
-            li.appendChild(new LightTextNode("Item " + i));
-            ul.appendChild(li);
-        }
+        div.appendChild(localImage);
+        div.appendChild(networkImage);
 
-        div.appendChild(ul);
         System.out.println(div.outerHTML());
 
         div.renderWithState();
